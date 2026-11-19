@@ -5,6 +5,7 @@
 task = "ocx.sh/go-task/task:3.53.1"
 cli = "ocx.sh/ocx/cli:0.6"
 mirror = "ocx.sh/ocx/mirror:0.6"
+uv = "ocx.sh/astral-sh/uv:0"
 
 [group.lint.tools]
 uv = "ocx.sh/astral-sh/uv:0.13.0"

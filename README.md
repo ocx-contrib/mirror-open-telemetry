@@ -26,6 +26,7 @@ otelcol/
 ├── metadata.json       bundle interface
 ├── CATALOG.md          → ocx package describe
 ├── logo.svg / logo.png describe assets, 512px PNG
+├── scripts/generate.py url_index generator (the native source 504s on this upstream)
 └── tests/smoke.star    Starlark smoke test
 ```
 
@@ -54,7 +55,7 @@ with the list of upstream platforms ocx cannot express (`linux_386`, `armv7`,
 `ppc64le`, `riscv64`, `s390x`, `windows_386`, `aix_ppc64`).
 
 ⚠️ The upstream repo also tags `cmd/builder/v…` and `cmd/opampsupervisor/v…`;
-the spec's anchored `tag_pattern` keeps those out.
+`otelcol/scripts/generate.py` keeps those out (it matches only `^v<semver>$` tags).
 
 ## Editing
 

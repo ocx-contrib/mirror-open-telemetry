@@ -26,8 +26,13 @@ cascade: true
 # ocx.lock.
 build_timestamp: date
 
-verify:
-  github_asset_digest: true
+# No `verify:` block. The source is a `url_index` generator, and the SDK's
+# `IndexBuilder` emits plain `name -> url` strings (no `{url, sha256}` object
+# form; its `Asset` model drops GitHub's per-asset `digest`), so no digest is
+# declared and `github_asset_digest` / `url_index_digest` (both default
+# `if_present`) have nothing to check. `checksums_file` takes ONE release-level
+# sha256sum URL; upstream publishes only per-asset `<asset>.sha256` sidecars, so
+# it cannot be used either. Downloads are therefore HTTPS-only, unverified.
 
 concurrency:
   # The binary is large: the unpacked `otelcol` is ~165-184 MB per platform

@@ -18,20 +18,27 @@ target:
   registry: ghcr.io
   repository: ocx-contrib/open-telemetry/otelcol
 
+# `url_index`, not the native `github_release` source — measured, not assumed.
+# `ocx-mirror`'s `github_release` source lists releases at a hard-coded
+# `per_page=100` (ocx-mirror `crates/ocx_mirror_source/src/github_release.rs`),
+# and this upstream's releases carry ~816 assets each, three releases per
+# version (`vX`, `cmd/builder/vX`, `cmd/opampsupervisor/vX`):
+#   $ gh api '…/opentelemetry-collector-releases/releases?per_page=100'  → 504 every time
+#   $ gh api '…/releases?per_page=30'  and  '…?per_page=10'              → 200
+# CI `discover` therefore died deterministically (exit 69, 504 after 5/5
+# retries). The SDK's REST backend falls back to a small page size on a 504 —
+# the same fix mirror-astral-sh uses for python-build-standalone.
+# scripts/generate.py keeps only `^v<semver>$` tags (so `cmd/builder/v…` and
+# `cmd/opampsupervisor/v…` never match) and only `^otelcol_…\.tar\.gz$` assets;
+# the `assets:` regexes below still each match exactly one emitted asset.
 source:
-  type: github_release
-  owner: open-telemetry
-  repo: opentelemetry-collector-releases
-  # ⚠ THE ANCHORS MATTER. This one repository tags several independently
-  # versioned components on the same numbers:
-  #   v0.165.0                     — the collector distributions  (wanted)
-  #   cmd/builder/v0.165.0         — the OCB builder              (NOT this package)
-  #   cmd/opampsupervisor/v0.165.0 — the OpAMP supervisor         (NOT this package)
-  # (`gh api repos/open-telemetry/opentelemetry-collector-releases/releases
-  # --jq '.[].tag_name'` lists all three per release.) `^v…$` matches only the
-  # first: the leading `^v` rejects the `cmd/…/v…` tags, the trailing `$`
-  # rejects any suffixed tag.
-  tag_pattern: "^v(?P<version>\\d+\\.\\d+\\.\\d+)$"
+  type: url_index
+  generator:
+    command: ["uv", "run", "scripts/generate.py"]
+    # Measured: ~35 s cold (uv env install + a failed per_page=100 probe + ~22
+    # pages at per_page=5). No early stop exists in the SDK, so every run
+    # crawls the history; the timeout is ~8x that.
+    timeout_seconds: 300
 
 # ─── libc gate (Phase 3.5) — the evidence, not the conclusion ───────────────
 #
