@@ -111,10 +111,10 @@ assets:
   darwin/arm64:
     - "^otelcol_.*_darwin_arm64\\.tar\\.gz$"
   # ── Pass 3 (windows) ───────────────────────────────────────────────────────
-  # windows/amd64:
-  #   - "^otelcol_.*_windows_amd64\\.tar\\.gz$"
-  # windows/arm64:
-  #   - "^otelcol_.*_windows_arm64\\.tar\\.gz$"
+  windows/amd64:
+    - "^otelcol_.*_windows_amd64\\.tar\\.gz$"
+  windows/arm64:
+    - "^otelcol_.*_windows_arm64\\.tar\\.gz$"
 
 # Every archive is FLAT: `otelcol` (`otelcol.exe` on Windows) sits at the
 # archive root beside README.md, with no wrapper directory and no leading `./`.
