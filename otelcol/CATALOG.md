@@ -15,7 +15,7 @@ file, and the collector runs that graph.
 This package is the **core distribution** (`otelcol`). It contains every
 component from the collector's core repository — OTLP receivers and exporters,
 the `batch` and `memory_limiter` processors, the `debug` exporter, and so on —
-plus a small, frozen selection of components from the contrib repository (for
+plus a small selection of components from the contrib repository (for
 example `file_log` and `host_metrics`). It is deliberately small.
 
 It is **not** the contrib distribution. `otelcol-contrib`, `otelcol-k8s`,
